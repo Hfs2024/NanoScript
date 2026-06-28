@@ -24,4 +24,4 @@ To set up NanoScript locally, follow these steps:
    cd NanoScript
    ```
 
-Contributions, bug reports, and repository stars are highly appreciated.
+*Contributions, bug reports, and repository stars are highly appreciated.*
