@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: aliceblue;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        button {
+            background-color: red;
+            border: none;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: darkred;
+            transform: scale(1.05);
+        }
+
+        @keyframes scale {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.5);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        p {
+            font-size: 20px;
+        }
+
+        .blue {
+            color: blue !important;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>This page is in NanoScript (NS)!</h1>
+    <p class="p">See me getting bigger!</p>
+    <p>Click the button to fetch a joke!</p>
+    <a href="normaljs.html">Click here for page using normal js</a>
+
+    <button>Click me!</button>
+    <script src="main.min.js"></script>
+    <script>
+        NS.ready(async () => {
+            NS("body").centerBody();
+            NS(".p").css("color", "red").animation("scale 1.4s ease");
+            NS("button").on("click", () => {
+                NS("h1").css({ color: "orange" }).html("You clicked the button!");
+                setTimeout(() => {
+                    NS("h1").addClass("blue");
+                }, 1000);
+                NS.fetch("https://v2.jokeapi.dev/joke/Any?type=single", "joke", "json", ".p", ".p");
+            });
+
+            NS.createEl("div", document.body, {
+                id: "wrapper"
+            });
+
+            // Append test
+            const myEl = document.createElement("p");
+            myEl.textContent = "That's very cool guys!";
+            NS("#wrapper").append(myEl);
+            console.log(NS("#wrapper").getText()[0]);
+
+            // XMl test
+            let text = await NS.xml.load("data-example.xml");
+            console.log(text);
+            let artilces = NS.xml.getAll(text, "article");
+        
+            // This:
+            artilces.forEach(article => {
+                const el = article.querySelector("title[title='hey']");
+                console.log(el ? el : "Nothing found in this el.");
+            });
+
+            console.log("--- XML way ---")
+
+            // Or that: 
+            artilces = NS(artilces);
+
+            artilces.each(article => {
+                const el = NS(article).get("title[title='hey']")[0]; // You MUST add [0] if you want the first element, otherwise, you will get an array of elements.
+                console.log(el ? el : "Nothing found in this el.");
+            });
+        });
+    </script>
+</body>
+
+</html>
