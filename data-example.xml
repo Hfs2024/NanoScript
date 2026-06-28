@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <articles>
-    <article id="1">
-        <title title="hey">Hey guys!</title>
+    <article>
+        <title title="hey">Hey everyone!</title>
         <content>Welcome everyone! ready to play games?</content>
     </article>
 
-    <article id="2"> 
+    <article> 
         <title title="hey">Hey coders!</title>
-        <content>Welcome everyone! ready to play code?</content>
+        <content>Welcome everyone! ready to code?</content>
     </article>
 
-    <article id="3"> 
-        <title title="bye">Goodbye!</title>
-        <content>See you soon everyone!</content>
+    <article> 
+        <title title="bye">Goodbye everyone!</title>
+        <content>See you soon!</content>
     </article>
 </articles>
