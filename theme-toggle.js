@@ -26,3 +26,18 @@ NS.themeToggle = ({
         localStorage.setItem(key, firstValue);
     }
 }
+
+/* Want an example? NS.theme({
+            key: "my-theme",
+            value: "dark",
+            theme: "dark",
+        });
+
+        document.getElementById("theme-toggle").addEventListener("click", function () {
+            NS.themeToggle({
+                firstValue: "light",
+                secondValue: "dark",
+                theme: "dark",
+                key: "my-theme"
+            });
+}); */
