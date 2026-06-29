@@ -34,6 +34,8 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             text-align: center;
             border: 1px solid #ccc;
+            max-height: 400px;
+            overflow: auto;
         }
 
         body.dark-mode .container {
@@ -70,34 +72,64 @@
             width: 80%;
             height: 60px;
         }
+
+        code {
+            background: rgba(0, 0, 0, 0.06);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+
+        .mock-form {
+            font-size: 20px;
+        }
+
+        input {
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 20px;
+            border: none;
+        }
     </style>
 </head>
 
 <body>
 
     <div class="container">
-        <h1>📝 NS Live Counter</h1>
-        <p>Start typing in the <b>textarea</b> to see live updates!</p>
+        <h1>👻 NS Ghost State</h1>
+        <p>Type or check something, tap <code>Ctrl+R</code> and all your text will be saved even with a refresh!</p>
+        <p class="mock-form"><b>Mock form:</b></p>
 
-        <textarea id="my-textarea" placeholder="Start typing..."></textarea>
-        <p>Count: <span id="counter">0/10</span></p>
-        <p>Remaining: <span id="remaining">10</span></p>
+        <input id="username-input" type="text" placeholder="Enter your name..." /></br></br>
+        <input id="age-input" type="text" placeholder="Enter your age..." />
+
+        <p><b>Gender:</b></p>
+        <div class="gender-select">
+            <input type="radio" name="gender" value="male" checked>
+            <label>Male</label>
+            <input type="radio" name="gender" value="female">
+            <label>Female</label>
+        </div>
+
+        <p><b>Choose your favorite meals:</b></p>
+        <div class="foo-select">
+            <input type="checkbox" checked>
+            <label>Burger</label>
+
+            <input type="checkbox">
+            <label>Fried Chicken</label>
+
+            <input type="checkbox">
+            <label>Tomato Soup</label></br></br>
+        </div>
+
+        <button id="clear-btn">Clear username</button>
     </div>
 
     <script src="../../main.min.js"></script>
-    <script src="../live-counter.js"></script>
+    <script src="../ghost-state.js"></script>
     <script>
-        NS.liveCounter({
-            element: "#my-textarea",
-            showCounter: true,
-            counterElement: "#counter",
-            showRemaining: true,
-            remainingElement: "#remaining",
-            max: 10,
-            onLimit: () => {
-                console.log("You have reached the limit 😏.");
-            }
-        });
+        // Working to create the plugin soon.
     </script>
 </body>
 

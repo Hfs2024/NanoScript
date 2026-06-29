@@ -106,17 +106,16 @@
 
         function updateStatus() {
             const current = localStorage.getItem("my-theme") || "light";
-            document.getElementById("theme-display").textContent = current;
+            NS("#theme-display").setText(current);
 
-            const btn = document.getElementById("theme-toggle");
             if (current === "dark") {
-                btn.textContent = "☀️ Switch to Light";
+                NS("#theme-toggle").setText("☀️ Switch to Light");
             } else {
-                btn.textContent = "🌙 Switch to Dark";
+                NS("#theme-toggle").setText("🌙 Switch to Dark");
             }
         }
 
-        document.getElementById("theme-toggle").addEventListener("click", function () {
+        NS("#theme-toggle").on("click", function () {
             NS.themeToggle({
                 key: "my-theme",
                 firstValue: "light",
@@ -129,9 +128,6 @@
         });
 
         updateStatus();
-
-        console.log("💡 Try this in DevTools: document.body.classList.remove('dark-mode')");
-        console.log("Then click the toggle button – it self-heals!");
     </script>
 
 </body>
