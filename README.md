@@ -5,7 +5,6 @@
 
 ## Example:
 ```javascript
-// Fade out an alert box over 300 milliseconds
 NS('.alert-box')
   .css({ color: "green" })
   .getText()[0] // You MUST add [0] if you want the first element text, because it returns an array.
