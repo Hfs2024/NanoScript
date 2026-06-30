@@ -98,14 +98,13 @@
     <script src="../../main.min.js"></script>
     <script src="../theme-toggle.js"></script>
     <script>
-        NS.theme({
+        const current = NS.theme({
             key: "my-theme",
             value: "dark",
             theme: "dark-mode",
         });
 
         function updateStatus() {
-            const current = localStorage.getItem("my-theme") || "light";
             NS("#theme-display").setText(current);
 
             if (current === "dark") {

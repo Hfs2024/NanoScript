@@ -4,9 +4,11 @@ NS.theme = ({
     theme = "",
     defaultValue = "light"
 } = {}) => {
-    if (!key || !value || !theme) return console.log("You must provide all args.");
+    if (!key || !value || !theme) return console.error("You must provide all args.");
     const keyValue = localStorage.getItem(key) || defaultValue;
     if (value === keyValue) document.body.classList.add(theme);
+
+    return keyValue;
 }
 
 NS.themeToggle = ({
@@ -16,7 +18,7 @@ NS.themeToggle = ({
     theme = "",
     defaultValue = "light"
 }) => {
-    if (!key || !theme || !firstValue || !secondValue) return console.log("You must provide all args.");
+    if (!key || !theme || !firstValue || !secondValue) return console.error("You must provide all args.");
     const keyValue = localStorage.getItem(key) || defaultValue;
     document.body.classList.toggle(theme);
 

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real World Example App Using NS</title>
+
+    <style>
+        /* Light theme (default) */
+        body {
+            background: #f0f0f0;
+            color: #222;
+            font-family: system-ui, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Dark theme class */
+        body.dark-mode {
+            background: #1a1a1a;
+            color: #eee;
+        }
+
+        .container {
+            background: inherit;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid #ccc;
+            max-width: 100%;
+            position: relative;
+            max-height: 400px;
+            overflow: auto;
+        }
+
+        input {
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 20px;
+            border: none;
+        }
+
+        .songs-list {
+            text-align: left;
+            max-height: 200px;
+            overflow: auto;
+        }
+
+        .song {
+            background-color: #444;
+            color: white;
+            padding: 10px;
+            border-radius: 7px;
+            margin: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .song:hover {
+            background-color: #666;
+        }
+
+        button {
+            padding: 10px 28px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            background: #0077ff;
+            color: white;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #005fcc;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📂 All NS plugins in one project!</h1>
+        <p>Find some new <b>Kasane</b> songs!</p>
+        <div class="group">
+            <button id="theme-toggle-btn">🌙</button>
+            <button id="clear-saved-song-btn">Clear</button>
+            <button id="copy-btn">Copy</button>
+        </div></br></br>
+
+        <input id="teto-songs-input" type="text" placeholder="Enter song name.." /></br></br>
+        <div class="group">
+            <p>Count: <span id="count">0/50</span></p>
+            <p>Remaining: <span id="remaining">50</span></p>
+        </div>
+
+        <div class="songs-list">
+            <div class="song">Voices In My Head feat. <b>Kasane Teto</b></div>
+            <div class="song">Execution Clap feat. <b>Kasane Teto</b></div>
+            <div class="song">YARARARA feat. <b>Kasane Teto</b></div>
+            <div class="song">Pixel Down. feat <b>Kasane Teto</b></div>
+            <div class="song">Cult. feat <b>Kasane Teto</b></div>
+        </div>
+    </div>
+
+    <!-- 🚀🚀🚀 Load everything 🚀🚀🚀 -->
+    <script src="../main.min.js"></script>
+    <script src="../plugins/find-array.js"></script>
+    <script src="../plugins/theme-toggle.js"></script>
+    <script src="../plugins/ghost-state.js"></script>
+    <script src="../plugins/live-counter.js"></script>
+    <script src="../plugins/copy.js"></script>
+
+    <script>
+        // Ghost state
+        NS.getGhostState();
+        NS.ghostState("#teto-songs-input");
+
+        NS("#clear-saved-song-btn").on("click", function () {
+            NS.clearGhostState("#teto-songs-input", () => {
+                location.reload();
+            });
+        });
+
+        // Teto songs filter (Auto sync by default)
+        NS.findArray({
+            items: document.querySelectorAll(".song"),
+            element: "#teto-songs-input"
+        });
+
+        NS(".song").each(song => {
+            NS(song).on("click", function () {
+                alert(`We all love listening to ${NS(song).getText()[0]}!`);
+            });
+        });
+
+        // Theme
+        const pageLoadedWithTheme = NS.theme({
+            key: "my-theme",
+            value: "dark",
+            theme: "dark-mode",
+        });
+
+        console.log(`You loaded this page with the ${pageLoadedWithTheme} theme!`);
+
+        function updateStatus() {
+            const current = localStorage.getItem("my-theme") || "light";
+
+            NS("#theme-display").setText(current);
+
+            if (current === "dark") {
+                NS("#theme-toggle-btn").setText("☀️");
+            } else {
+                NS("#theme-toggle-btn").setText("🌙");
+            }
+        }
+
+        NS("#theme-toggle-btn").on("click", function () {
+            NS.themeToggle({
+                key: "my-theme",
+                firstValue: "light",
+                secondValue: "dark",
+                theme: "dark-mode",
+                defaultValue: "light"
+            });
+
+            updateStatus();
+        });
+
+        updateStatus();
+
+        // Live counter
+        const counter = NS.liveCounter({
+            element: "#teto-songs-input",
+            max: 50,
+            showCounter: true,
+            showRemaining: true,
+            counterElement: "#count",
+            remainingElement: "#remaining",
+            allowedKeys: ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Control', 'Alt'],
+            onLimit: () => {
+                alert("No Kasane Teto song name is that tall 😅.");
+            }
+        });
+
+        // Count sync (Keep in mind that it only returns once per load, not everytime you type)
+        NS("#count").setText(`${counter.count}/50`);
+        NS("#remaining").setText(`${counter.remaining}`);
+
+        // Copy
+        NS("#copy-btn").on("click", function () {
+            NS.copy({
+                text: NS("#teto-songs-input").getVal()[0],
+                onSuccess: () => {
+                    alert("Copied!")
+                },
+
+                onFailure: (e) => {
+                    alert(`Failed: ${e.message}`);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

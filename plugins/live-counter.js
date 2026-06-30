@@ -1,14 +1,15 @@
 NS.liveCounter = ({
     element = "",
     max = 100,
+    allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Control', 'Alt'],
     counterElement = "",
     remainingElement = "",
     showCounter = false,
     showRemaining = false,
     onLimit
 }) => {
-    if (typeof onLimit !== "function") return console.log("onLimit arg must be a type of function.");
-    if (!element || !Number.isInteger(max)) return console.log("Please provide all arguments. Make sure max is a number.");
+    if (typeof onLimit !== "function") return console.error("onLimit arg must be a type of function.");
+    if (!element || !Number.isInteger(max) || !Array.isArray(allowedKeys)) return console.error("Please provide all arguments. Make sure max is a number and allowedKeys in an array.");
     const foundElement = document.querySelector(element);
     let foundCounter = "";
     let foundRemaining = "";
@@ -38,7 +39,6 @@ NS.liveCounter = ({
     });
 
     foundElement.addEventListener('keydown', function (e) {
-        const allowedKeys = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'];
         if (allowedKeys.includes(e.key)) return;
         const length = foundElement.value.length;
 
@@ -47,4 +47,9 @@ NS.liveCounter = ({
             onLimit();
         }
     });
+
+    return {
+        count: foundElement.value.length,
+        remaining: max - foundElement.value.length
+    }
 }

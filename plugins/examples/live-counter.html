@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NS Theme Toggle – Live Test</title>
+    <title>NS Live Counter – Live Test</title>
 
     <style>
         /* Light theme (default) */
@@ -21,12 +21,6 @@
             justify-content: center;
         }
 
-        /* Dark theme class */
-        body.dark-mode {
-            background: #1a1a1a;
-            color: #eee;
-        }
-
         .container {
             background: inherit;
             padding: 2rem 3rem;
@@ -34,32 +28,6 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             text-align: center;
             border: 1px solid #ccc;
-        }
-
-        body.dark-mode .container {
-            border-color: #444;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-        }
-
-        button {
-            padding: 10px 28px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border: none;
-            border-radius: 40px;
-            cursor: pointer;
-            background: #0077ff;
-            color: white;
-            transition: background 0.2s, transform 0.1s;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background: #005fcc;
-        }
-
-        button:active {
-            transform: scale(0.96);
         }
 
         textarea {
@@ -77,7 +45,7 @@
 
     <div class="container">
         <h1>📝 NS Live Counter</h1>
-        <p>Start typing in the <b>textarea</b> to see live updates!</p>
+        <p>Start typing your name in the <b>textarea</b> to see live updates!</p>
 
         <textarea id="my-textarea" placeholder="Start typing..."></textarea>
         <p>Count: <span id="counter">0/10</span></p>

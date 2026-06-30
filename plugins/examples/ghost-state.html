@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NS Theme Toggle – Live Test</title>
+    <title>NS Ghost State – Live Test</title>
 
     <style>
         /* Light theme (default) */
@@ -21,12 +21,6 @@
             justify-content: center;
         }
 
-        /* Dark theme class */
-        body.dark-mode {
-            background: #1a1a1a;
-            color: #eee;
-        }
-
         .container {
             background: inherit;
             padding: 2rem 3rem;
@@ -34,13 +28,7 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             text-align: center;
             border: 1px solid #ccc;
-            max-height: 400px;
-            overflow: auto;
-        }
-
-        body.dark-mode .container {
-            border-color: #444;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+            max-width: 100%;
         }
 
         button {
@@ -54,6 +42,7 @@
             color: white;
             transition: background 0.2s, transform 0.1s;
             margin-top: 10px;
+            white-space: nowrap;
         }
 
         button:hover {
@@ -62,15 +51,6 @@
 
         button:active {
             transform: scale(0.96);
-        }
-
-        textarea {
-            background-color: #000000;
-            color: white;
-            padding: 10px;
-            border-radius: 10px;
-            width: 80%;
-            height: 60px;
         }
 
         code {
@@ -90,6 +70,14 @@
             border-radius: 20px;
             border: none;
         }
+
+        .group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow-x: auto;
+            max-width: 100%;
+        }
     </style>
 </head>
 
@@ -97,39 +85,39 @@
 
     <div class="container">
         <h1>👻 NS Ghost State</h1>
-        <p>Type or check something, tap <code>Ctrl+R</code> and all your text will be saved even with a refresh!</p>
+        <p>Type or check something, tap <code>Ctrl+R</code> and all your data will be saved even with a refresh!</p>
         <p class="mock-form"><b>Mock form:</b></p>
 
         <input id="username-input" type="text" placeholder="Enter your name..." /></br></br>
-        <input id="age-input" type="text" placeholder="Enter your age..." />
+        <input id="age-input" type="number" placeholder="Enter your age..." /></br></br>
 
-        <p><b>Gender:</b></p>
-        <div class="gender-select">
-            <input type="radio" name="gender" value="male" checked>
-            <label>Male</label>
-            <input type="radio" name="gender" value="female">
-            <label>Female</label>
+        <div class="group">
+            <button id="clear-username-btn">Clear username</button>
+            <button id="clear-age-btn">Clear age</button>
         </div>
-
-        <p><b>Choose your favorite meals:</b></p>
-        <div class="foo-select">
-            <input type="checkbox" checked>
-            <label>Burger</label>
-
-            <input type="checkbox">
-            <label>Fried Chicken</label>
-
-            <input type="checkbox">
-            <label>Tomato Soup</label></br></br>
-        </div>
-
-        <button id="clear-btn">Clear username</button>
     </div>
 
     <script src="../../main.min.js"></script>
     <script src="../ghost-state.js"></script>
     <script>
-        // Working to create the plugin soon.
+        // Only use this plugin for normal, small forms.
+        NS.getGhostState(); // Applies ghost state on load.
+        NS.ghostState("#username-input"); // Set ghost state.
+        NS.ghostState("#age-input"); // Set ghost state.
+
+        NS("#clear-username-btn").on("click", function () {
+            NS.clearGhostState("#username-input", () => {
+                alert("Cleared username!");
+                location.reload();
+            });
+        });
+
+        NS("#clear-age-btn").on("click", function () {
+            NS.clearGhostState("#age-input", () => {
+                alert("Cleared!");
+                location.reload();
+            });
+        });
     </script>
 </body>
 
