@@ -1,28 +1,38 @@
-NS.type = ({
+NS.type = async ({
     target,
-    text,
+    strings = ["I am a text typing effect!"],
     speed = 100,
     loop = false,
     loopDelay = 200,
     onEnd
 } = {}) => {
-    if (!target || !text || !Number.isInteger(speed) || !Number.isInteger(loopDelay)) return console.error("Please pass a target and text, and make sure speed and loopDelay are integers");
+    if (!target || !Number.isInteger(speed) || !Number.isInteger(loopDelay)) return console.error("Please pass a target, and make sure speed and loopDelay are integers");
 
     const foundTarget = document.querySelector(target);
     foundTarget.textContent = ""; // Reset the target text
+    let globalCharCount = 0;
 
-    for (let i = 0; i < text.length; i++) {
+    for (let i = 0; i < strings.length; i++) {
+        const string = strings[i];
+
         setTimeout(() => {
-            foundTarget.textContent += text[i];
+            foundTarget.textContent = "";
+        }, speed * globalCharCount);
 
-            if (i === text.length - 1) {
-                if (typeof onEnd !== "function") onEnd();
-                if (loop) {
-                    setTimeout(() => {
-                        NS.type({ target, text, speed, loop, loopDelay, onEnd });
-                    }, loopDelay);
+        for (let j = 0; j < string.length; j++) {
+            setTimeout(() => {
+                foundTarget.textContent += string[j];
+
+                if ((j === string.length - 1) && (i === strings.length - 1)) {
+                    if (loop) {
+                        setTimeout(() => {
+                            NS.type({ target, strings, speed, loop, loopDelay, onEnd });
+                        }, loopDelay);
+                    }
                 }
-            }
-        }, speed * i);
+            }, speed * globalCharCount);
+
+            globalCharCount++;
+        }
     }
 }
