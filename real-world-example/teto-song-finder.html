@@ -94,6 +94,40 @@
             align-items: center;
             gap: 20px;
         }
+
+        #context-menu {
+            /* Style your menu however you want, don't use my bad style 😅 */
+            background-color: white;
+            position: fixed;
+            display: none;
+            border-radius: 20px;
+            width: 200px;
+            border: 2px solid #07E;
+            padding: 10px;
+            z-index: 9999;
+            transition: top 0.3s ease, left 0.3s ease;
+            overflow: auto;
+        }
+
+        .context-menu-item {
+            background-color: #eee;
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            overflow: auto;
+            color: black;
+        }
+
+        .context-menu-item:hover {
+            background-color: #aaa;
+        }
     </style>
 </head>
 
@@ -122,6 +156,18 @@
         </div>
     </div>
 
+    <div id="context-menu">
+        <div class="context-menu-item">
+            <p class="context-menu-icon">🔥</p>
+            <p class="context-menu-text">Teto is amazing!</p>
+        </div>
+
+        <div class="context-menu-item">
+            <p class="context-menu-icon">😎</p>
+            <p class="context-menu-text">And you are amazing too for viewing my code!</p>
+        </div>
+    </div>
+
     <!-- 🚀🚀🚀 Load everything 🚀🚀🚀 -->
     <script src="../main.min.js"></script>
     <script src="../plugins/find-array.js"></script>
@@ -129,6 +175,7 @@
     <script src="../plugins/ghost-state.js"></script>
     <script src="../plugins/live-counter.js"></script>
     <script src="../plugins/copy.js"></script>
+    <script src="../plugins/context-menu.js"></script>
 
     <script>
         // Ghost state
@@ -217,6 +264,19 @@
                 onFailure: (e) => {
                     alert(`Failed: ${e.message}`);
                 }
+            });
+        });
+
+        // Context menu
+        NS.contextMenu({
+            parent: "body",
+            menu: "#context-menu",
+            display: "block"
+        });
+
+        NS(".context-menu-item").each(btn => {
+            NS(btn).on("click", (e) => {
+                alert(`You clicked on: ${e.target.textContent.trim()}`);
             });
         });
     </script>
