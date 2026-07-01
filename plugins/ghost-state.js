@@ -26,7 +26,7 @@ NS.ghostState = (selector) => {
 NS.clearGhostState = (selector, onEnd) => {
     if (!selector) return console.error("You must provide a selector.");
 
-    let currentSaves = JSON.parse(localStorage.getItem("ns-current-saves")) || {};
+    let currentSaves = JSON.parse(localStorage.getItem("ns-current-saves")) || [];
     currentSaves = currentSaves.filter(save => save.selector !== selector);
   
     localStorage.setItem("ns-current-saves", JSON.stringify(currentSaves));
