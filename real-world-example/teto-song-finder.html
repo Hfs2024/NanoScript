@@ -176,6 +176,7 @@
     <script src="../plugins/live-counter.js"></script>
     <script src="../plugins/copy.js"></script>
     <script src="../plugins/context-menu.js"></script>
+    <script src="../plugins/input-validation.js"></script>
 
     <script>
         // Ghost state
@@ -183,6 +184,12 @@
         NS.ghostState("#teto-songs-input");
 
         NS("#clear-saved-song-btn").on("click", function () {
+            const isValidInput = NS.validate("#teto-songs-input", {
+                required: true
+            });
+
+            if (!isValidInput) return alert("You didn't enter anything to clear!");
+
             NS.clearGhostState("#teto-songs-input", () => {
                 location.reload();
             });
@@ -255,6 +262,12 @@
 
         // Copy
         NS("#copy-btn").on("click", function () {
+            const isValidInput = NS.validate("#teto-songs-input", {
+                required: true
+            });
+
+            if (!isValidInput) return alert("You didn't enter anything yet!");
+
             NS.copy({
                 text: NS("#teto-songs-input").getVal()[0],
                 onSuccess: () => {
