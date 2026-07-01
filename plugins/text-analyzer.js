@@ -97,6 +97,6 @@ NS.textAnalyzer("I like pizza!").toElement("p", document.body, {
 
   Because: A token is evaluated even if it doesn't start with a number. However, if a 
   token starts with a number and a non-digit character is encountered, processing 
-  stops for that specific token. Sitting the second argument (alone) to true will 
-  split non joined numbers return: [1, 2, 2, 2, 2, 4, 2, 2, 0, 2, 2, 2, 2, 0, 1, 0, 1] accepting all numbers but without being joined.
+  stops for that specific token. Setting the second argument (alone) to true will 
+  split non joined numbers, returning: [1, 2, 2, 2, 2, 4, 2, 2, 0, 2, 2, 2, 2, 0, 1, 0, 1] accepting all numbers but without being joined.
 */
