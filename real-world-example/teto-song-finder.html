@@ -133,7 +133,7 @@
 
 <body>
     <div class="container">
-        <h1>📂 All NS plugins in one project!</h1>
+        <h1 id="text-to-type">📂 All NS plugins in one project!</h1>
         <p>Find some new <b>Kasane</b> songs!</p>
         <div class="group">
             <button id="theme-toggle-btn">🌙</button>
@@ -177,6 +177,7 @@
     <script src="../plugins/copy.js"></script>
     <script src="../plugins/context-menu.js"></script>
     <script src="../plugins/input-validation.js"></script>
+    <script src="../plugins/typer.js"></script>
 
     <script>
         // Ghost state
@@ -291,6 +292,15 @@
             NS(btn).on("click", (e) => {
                 alert(`You clicked on: ${e.target.textContent.trim()}`);
             });
+        });
+
+        // Typer
+        NS.type({
+            target: "#text-to-type",
+            text: NS("#text-to-type").getText()[0],
+            speed: 100,
+            loop: true,
+            loopDelay: 1000
         });
     </script>
 </body>
