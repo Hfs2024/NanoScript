@@ -310,68 +310,21 @@ NS.createEl = function (type, target, props) {
   return el;
 };
 
-NS.fetch = async function (...args) {
-  // Default options
-  let options = {
-    url: "",
-    path: "",
-    type: "json",
-    apply: console.log,
-    failApply: console.warn
-  };
-
-  if (args.length === 1 && typeof args[0] === "object") {
-    options = { ...options, ...args[0] };
-  }
-
-  else {
-    options.url = args[0] || "";
-    options.path = args[1] || "";
-    options.type = args[2] || "json";
-    options.apply = args[3] || console.log;
-    options.failApply = args[4] || console.warn;
-  }
-
-  // Convert apply/failApply if string
-  ["apply", "failApply"].forEach(key => {
-    if (typeof options[key] === "string") {
-      if (options[key] === "console.log") options[key] = console.log;
-      else if (options[key] === "alert") options[key] = alert;
-      else {
-        const elem = document.querySelector(options[key]);
-        if (elem) options[key] = val => { elem.textContent = val; };
-        else options[key] = key === "apply" ? console.log : console.warn;
-      }
-    }
-  });
-
+NS.fetch = async function ({ url, path, type } = {}) {
   try {
-    const response = await fetch(options.url);
+    const response = await fetch(url);
     let data;
 
-    if (options.type === "json") data = await response.json();
-    else if (options.type === "text") data = await response.text();
+    if (type === "json") data = await response.json();
+    else if (type === "text") data = await response.text();
     else data = await response.json();
 
-    let result = data;
-    if (options.path) {
-      options.path.split(".").forEach(k => {
-        if (result && k in result) result = result[k];
-        else result = undefined;
-      });
-    }
+    if (path) return data[path];
 
-    if (result === undefined) options.failApply(`Failed to fetch 'data.${options.path}', full data: ${JSON.stringify(data, null, 2)} `);
-    else options.apply(result);
-
+    return data;
   } catch (error) {
     console.error("Error:", error);
-    options.failApply(error);
   }
-};
-
-NS.plugin = function (fn) {
-  fn(NS);
 };
 
 // ------------------ Themes -----------------
