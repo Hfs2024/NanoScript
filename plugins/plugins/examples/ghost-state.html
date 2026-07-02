@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NS Ghost State – Live Test</title>
+
+    <style>
+        /* Light theme (default) */
+        body {
+            background: #f0f0f0;
+            color: #222;
+            font-family: system-ui, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: inherit;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid #ccc;
+            max-width: 100%;
+        }
+
+        button {
+            padding: 10px 28px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            background: #0077ff;
+            color: white;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 10px;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #005fcc;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.06);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+
+        .mock-form {
+            font-size: 20px;
+        }
+
+        input {
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 20px;
+            border: none;
+        }
+
+        .group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>👻 NS Ghost State</h1>
+        <p>Type or check something, tap <code>Ctrl+R</code> and all your data will be saved even with a refresh!</p>
+        <p class="mock-form"><b>Mock form:</b></p>
+
+        <input id="username-input" type="text" placeholder="Enter your name..." /></br></br>
+        <input id="age-input" type="number" placeholder="Enter your age..." /></br></br>
+
+        <div class="group">
+            <button id="clear-username-btn">Clear username</button>
+            <button id="clear-age-btn">Clear age</button>
+        </div>
+    </div>
+
+    <script src="../../main.min.js"></script>
+    <script src="../ghost-state.js"></script>
+    <script>
+        // Only use this plugin for normal, small forms.
+        NS.getGhostState(); // Applies ghost state on load.
+        NS.ghostState("#username-input"); // Set ghost state.
+        NS.ghostState("#age-input"); // Set ghost state.
+
+        NS("#clear-username-btn").on("click", function () {
+            NS.clearGhostState("#username-input", () => {
+                alert("Cleared username!");
+                location.reload();
+            });
+        });
+
+        NS("#clear-age-btn").on("click", function () {
+            NS.clearGhostState("#age-input", () => {
+                alert("Cleared!");
+                location.reload();
+            });
+        });
+    </script>
+</body>
+
+</html>

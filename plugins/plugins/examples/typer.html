@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NS Typer – Live Test</title>
+
+    <style>
+        /* Light theme (default) */
+        body {
+            background: #f0f0f0;
+            color: #222;
+            font-family: system-ui, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: inherit;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 10px 28px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            background: #0077ff;
+            color: white;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #005fcc;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 id="text-to-type">⌨️ NS Typer</h1>
+        <p>Click the button to start typing the header text!</p>
+
+        <button id="type-btn">Start typing 👨🏻‍💻👨🏻‍💻</button>
+    </div>
+
+    <script src="../../main.min.js"></script>
+    <script src="../typer.js"></script>
+    <script>
+        let isRunning = false;
+
+        NS("#type-btn").on("click", function () {
+            if (isRunning) return;
+            isRunning = true;
+
+            NS.type({
+                target: "#text-to-type",
+                strings: [NS("#text-to-type").getText()[0]],
+                speed: 100,
+                loop: true,
+                loopDelay: 1000,
+                onEnd: () => {
+                    isRunning = false;
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
