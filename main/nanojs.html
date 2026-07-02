@@ -65,12 +65,21 @@
         NS.ready(async () => {
             NS("body").centerBody();
             NS(".p").css("color", "red").animation("scale 1.4s ease");
-            NS("button").on("click", () => {
+            NS("button").on("click", async () => {
                 NS("h1").css({ color: "orange" }).html("You clicked the button!");
                 setTimeout(() => {
                     NS("h1").addClass("blue");
                 }, 1000);
-                NS.fetch("https://v2.jokeapi.dev/joke/Any?type=single", "joke", "json", ".p", ".p");
+
+                const data = await NS.fetch({
+                    url: "https://v2.jokeapi.dev/joke/Any?type=single",
+                    path: "joke",
+                    type: "json"
+                });
+
+                console.log(data);
+
+                NS(".p").setText(data);
             });
 
             NS.createEl("div", document.body, {
@@ -87,7 +96,7 @@
             let text = await NS.xml.load("data-example.xml");
             console.log(text);
             let artilces = NS.xml.getAll(text, "article");
-        
+
             // This:
             artilces.forEach(article => {
                 const el = article.querySelector("title[title='hey']");
