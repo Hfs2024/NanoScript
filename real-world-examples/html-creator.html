@@ -188,9 +188,8 @@
                 title: "Please enter some content!"
             });
 
-            NS("#text-editor").setText(
-                NS("#text-editor").html()
-            );
+            const htmlContent = NS("#text-editor").html();
+            NS("#text-editor").setText(htmlContent);
         });
 
         NS("#copy-btn").on("click", function () {
