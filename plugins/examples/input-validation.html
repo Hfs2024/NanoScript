@@ -114,20 +114,20 @@
         });
 
         NS("#validate-btn").on("click", function () {
-            const isValidUsername = NS.validate("#username-input", {
+            const isValidUsername = NS.validate("#username-input", "value", {
                 required: true
             });
 
             if (!isValidUsername) return alert("Make sure you passed a correct username!");
 
-            const isValidGender = NS.validate("#gender-input", {
+            const isValidGender = NS.validate("#gender-input", "value", {
                 required: true,
                 enum: ["male", "female", "other"]
             });
 
             if (!isValidGender) return alert("Allowed gender values: male, female, other");
 
-            const isValidAge = NS.validate("#age-input", {
+            const isValidAge = NS.validate("#age-input", "value", {
                 required: true,
                 min: 0,
                 max: 130
