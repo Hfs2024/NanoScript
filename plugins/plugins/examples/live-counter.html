@@ -50,6 +50,8 @@
         <textarea id="my-textarea" placeholder="Start typing..."></textarea>
         <p>Count: <span id="counter">0/10</span></p>
         <p>Remaining: <span id="remaining">10</span></p>
+
+        <p><b>Note: </b> The letter "t" and "T" is not counted.</p>
     </div>
 
     <script src="../../main.min.js"></script>
@@ -62,6 +64,7 @@
             showRemaining: true,
             remainingElement: "#remaining",
             max: 10,
+            excludeChars: ["t", "T"],
             onLimit: () => {
                 console.log("You have reached the limit 😏.");
             }
