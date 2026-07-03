@@ -88,6 +88,7 @@
 
         <p class="mock-form-head">Quick Mock form: </p>
         <input id="username-input" type="text" placeholder="Enter your username..." /></br></br>
+        <input id="confirm-username-input" type="text" placeholder="Confirm your username..." /></br></br>
         <input id="gender-input" type="text" placeholder="Enter your gender..." /></br></br>
         <input id="age-input" type="number" placeholder="Enter your age..." /></br></br>
 
@@ -95,7 +96,7 @@
 
         <p><b>Rules:</b></p>
         <ul class="rules-list">
-            <li>You must mention your username</li>
+            <li>You must mention your username (3-16 characters, alphanumeric and underscores only)</li>
             <li>You must choose a valid gender (male, female, other)</li>
             <li>You must choose a valid age between 0 and 130</li>
         </ul>
@@ -109,16 +110,19 @@
     <script>
         NS("#quick-fill").on("click", function () {
             NS("#username-input").setVal("Kasane Teto");
+            NS("#confirm-username-input").setVal("Kasane Teto");
             NS("#gender-input").setVal("female");
             NS("#age-input").setVal("31");
         });
 
         NS("#validate-btn").on("click", function () {
             const isValidUsername = NS.validate("#username-input", "value", {
-                required: true
+                required: true,
+                regex: /^[a-zA-Z0-9_ ]{3,16}$/,
+                matchesWith: "#confirm-username-input"
             });
 
-            if (!isValidUsername) return alert("Make sure you passed a correct username!");
+            if (!isValidUsername) return alert("Make sure you passed a correct username that matches with the confirm!");
 
             const isValidGender = NS.validate("#gender-input", "value", {
                 required: true,
