@@ -310,9 +310,26 @@ NS.createEl = function (type, target, props) {
   return el;
 };
 
-NS.fetch = async function ({ url, path, type } = {}) {
+NS.fetch = async function ({
+  url, path, type,
+  method = "GET", body = {},
+  mediaType = "application/json",
+  headers
+} = {}) {
   try {
-    const response = await fetch(url);
+    method = method.toUpperCase();
+    let response = null;
+
+    const hasPayload = ["POST", "PUT", "PATCH"].includes(method.toUpperCase());
+
+    const options = hasPayload ? {
+      method: method,
+      headers: { "Content-Type": mediaType, ...headers },
+      body: JSON.stringify(body)
+    } : { method: method };
+
+    response = await fetch(url, options);
+
     let data;
 
     if (type === "json") data = await response.json();
