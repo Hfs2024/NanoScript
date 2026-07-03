@@ -39,7 +39,7 @@
             height: 60px;
         }
 
-        .per-warning {
+        .pre-warning {
             color: yellow;
         }
 
@@ -78,9 +78,9 @@
             max: 10,
             excludeChars: ["t", "T"],
             visualFeedback: [
-                { value: "3", class: "per-warning" },
-                { value: "5", class: "warning" },
-                { value: "8", class: "danger" }
+                { value: 3, class: "pre-warning", addTo: ["#my-textarea", "#counter", "#remaining"] },
+                { value: 5, class: "warning", addTo: ["#my-textarea", "#counter", "#remaining"] },
+                { value: 8, class: "danger", addTo: ["#my-textarea", "#counter", "#remaining"] }
             ],
             onLimit: () => {
                 console.log("You have reached the limit 😏.");

@@ -15,6 +15,7 @@ NS.liveCounter = ({
     const foundElement = document.querySelector(element);
     let foundCounter = "";
     let foundRemaining = "";
+
     if (showCounter) foundCounter = document.querySelector(counterElement);
     if (showRemaining) foundRemaining = document.querySelector(remainingElement);
 
@@ -45,7 +46,7 @@ NS.liveCounter = ({
             e.preventDefault();
             return;
         }
-        
+
         const length = foundElement.value.length;
 
         if (length >= max) {
@@ -60,13 +61,16 @@ NS.liveCounter = ({
         if (showRemaining && foundRemaining) foundRemaining.textContent = max - length;
 
         for (let item of visualFeedback) {
-            if (!item.value || !item.class) {
+            if (!item.value || !item.class || !Array.isArray(item.addTo)) {
                 console.log("One of your visual feedback objects don't match the default syntax.");
                 break;
             }
 
-            if (item.value < length) foundElement.classList.add(item.class);
-            else foundElement.classList.remove(item.class);
+            for (let el of item.addTo) {
+                const foundItem = document.querySelector(el);
+                if (item.value < length) foundItem.classList.add(item.class);
+                else foundItem.classList.remove(item.class);
+            }
         }
     });
 
