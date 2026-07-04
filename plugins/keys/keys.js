@@ -6,7 +6,7 @@ NS.combination = ({
     shift = false,
     action
 }) => {
-    if (!Array.isArray(keys) || !selector) return console.error("You didn't enter a key or a selector!");
+    if (!Array.isArray(keys) || !selector) return console.error("You didn't enter a key and a selector!");
 
     const foundElement = document.querySelector(selector);
 
