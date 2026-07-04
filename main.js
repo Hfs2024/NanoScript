@@ -298,6 +298,16 @@ function NS(selector) {
     return obj;
   }
 
+  obj.getDataSetItem = function (target) {
+    return elements.map(el => el.dataset?.target);
+  },
+
+  obj.setDataSetItem = function (target, value) {
+    for (let i = 0; i < elements.length; i++) elements[i].dataset.target = value;
+
+    return obj;
+  }
+
   return obj;
 }
 
