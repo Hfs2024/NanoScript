@@ -283,6 +283,12 @@ function NS(selector) {
     return obj;
   };
 
+  obj.click = function () {
+    for (let i = 0; i < elements.length; i++) elements[i].click();
+
+    return obj;
+  }
+
   obj.append = function (target) {
     for (let i = 0; i < elements.length; i++) {
       const nodeToAppend = i === elements.length - 1 ? target : target.cloneNode(true);

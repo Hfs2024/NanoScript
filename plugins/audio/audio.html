@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NS ContextMenu – Live Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+
+    <style>
+        /* Light theme (default) */
+        body {
+            background: #f0f0f0;
+            color: #222;
+            font-family: system-ui, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: inherit;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid #ccc;
+            max-width: 100%;
+        }
+
+        button {
+            padding: 10px 28px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            background: #0077ff;
+            color: white;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 10px;
+            white-space: nowrap;
+        }
+
+        button:hover {
+            background: #005fcc;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .group {
+                justify-content: flex-start;
+                overflow: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🔉 NS Audio</h1>
+
+        <p><b>Current loop status: </b> <span id="current-loop-status">true</span></p>
+
+        <div class="group">
+            <button id="play-btn">
+                <i class="fas fa-play"></i>
+            </button>
+            <button id="mute-btn">
+                <i class="fas fa-volume-xmark"></i>
+            </button>
+            <button id="loop-btn">
+                Loop <i class="fas fa-repeat"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="../../main.min.js"></script>
+    <script src="../audio/audio.js"></script>
+
+    <script>
+        let myAudio = NS.audio({
+            src: "audios/race-start-beeps.mp3",
+            loop: true,
+            onEnd: () => {
+                NS("#play-btn").html("<i class='fas fa-play'></i>");
+            }
+        });
+
+        NS("#loop-btn").on("click", function () {
+            myAudio.setLoop(!myAudio.isLooped());
+            NS("#current-loop-status").setText(myAudio.isLooped().toString());
+            NS("#play-btn").click();
+        });
+
+        NS("#mute-btn").on("click", function () {
+            console.log("Hey, still working!");
+        });
+
+        NS("#play-btn").on("click", function () {
+            if (myAudio.isPaused()) {
+                NS("#play-btn").html("<i class='fas fa-pause'></i>");
+                myAudio.play();
+            } else {
+                NS("#play-btn").html("<i class='fas fa-play'></i>");
+                myAudio.pause();
+            }
+        });
+
+        /* Planning to add:
+          1- Random music from array
+          2- Set speed
+          3- Set volume
+          4- onPlay
+        */
+    </script>
+</body>
+
+</html>

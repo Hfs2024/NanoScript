@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NS ContextMenu – Live Test</title>
+
+    <style>
+        /* Light theme (default) */
+        body {
+            background: #f0f0f0;
+            color: #222;
+            font-family: system-ui, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: inherit;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid #ccc;
+            max-width: 100%;
+        }
+
+        #context-menu {
+            /* Style your menu however you want, don't use my bad style 😅 */
+            background-color: white;
+            position: fixed;
+            display: none;
+            border-radius: 20px;
+            width: 200px;
+            border: 2px solid #07E;
+            padding: 10px;
+            z-index: 9999;
+            transition: top 0.3s ease, left 0.3s ease;
+            height: 40%;
+            overflow: auto;
+        }
+
+        .context-menu-item {
+            background-color: #eee;
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 10px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+            overflow: auto;
+        }
+
+        .context-menu-item:hover {
+            background-color: #aaa;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🎮 NS ContextMenu</h1>
+        <p><b>Right click</b> anywhere on this page!</p>
+    </div>
+
+    <div id="context-menu">
+        <div class="context-menu-item">
+            <p class="context-menu-icon">🔥</p>
+            <p class="context-menu-text">First, fire it up!</p>
+        </div>
+
+        <div class="context-menu-item">
+            <p class="context-menu-icon">🎶</p>
+            <p class="context-menu-text">Then, listen to some music!</p>
+        </div>
+
+        <div class="context-menu-item">
+            <p class="context-menu-icon">📰</p>
+            <p class="context-menu-text">Finally, let's code together!</p>
+        </div>
+    </div>
+
+    <script src="../../main.min.js"></script>
+    <script src="../context-menu/context-menu.js"></script>
+
+    <script>
+        NS.contextMenu({
+            parent: "body", // The parent of the context menu
+            menu: "#context-menu", // The context menu itself
+            display: "block" // How would it display the menu?
+        });
+
+        NS(".context-menu-item").each(btn => {
+            NS(btn).on("click", (e) => {
+                alert(`You clicked on: ${e.target.textContent.trim()}`);
+            });
+        });
+    </script>
+</body>
+
+</html>

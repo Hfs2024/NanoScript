@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NS Live Counter – Live Test</title>
+
+    <style>
+        /* Light theme (default) */
+        body {
+            background: #f0f0f0;
+            color: #222;
+            font-family: system-ui, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: inherit;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        textarea {
+            background-color: #000000;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            width: 80%;
+            height: 60px;
+        }
+
+        .pre-warning {
+            color: yellow;
+        }
+
+        .warning {
+            color: orange;
+        }
+
+        .danger {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>📝 NS Live Counter</h1>
+        <p>Start typing your name in the <b>textarea</b> to see live updates!</p>
+
+        <textarea id="my-textarea" placeholder="Start typing..."></textarea>
+        <p>Count: <span id="counter">0/10</span></p>
+        <p>Remaining: <span id="remaining">10</span></p>
+
+        <p><b>Note: </b> The letter "t" and "T" is not counted.</p>
+    </div>
+
+    <script src="../../main.min.js"></script>
+    <script src="../live-counter/live-counter.js"></script>
+    <script>
+        NS.liveCounter({
+            element: "#my-textarea",
+            showCounter: true,
+            counterElement: "#counter",
+            showRemaining: true,
+            remainingElement: "#remaining",
+            max: 10,
+            excludeChars: ["t", "T"],
+            visualFeedback: [
+                { value: 3, class: "pre-warning", addTo: ["#my-textarea", "#counter", "#remaining"] },
+                { value: 5, class: "warning", addTo: ["#my-textarea", "#counter", "#remaining"] },
+                { value: 8, class: "danger", addTo: ["#my-textarea", "#counter", "#remaining"] }
+            ],
+            onLimit: () => {
+                console.log("You have reached the limit 😏.");
+            }
+        });
+    </script>
+</body>
+
+</html>

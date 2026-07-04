@@ -5,6 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Real World Example App Using NS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
 
     <style>
         /* Light theme (default) */
@@ -178,15 +179,14 @@
 
     <!-- 🚀🚀🚀 Load everything 🚀🚀🚀 -->
     <script src="../main.min.js"></script>
-    <script src="../plugins/find-array.js"></script>
-    <script src="../plugins/theme-toggle.js"></script>
-    <script src="../plugins/ghost-state.js"></script>
-    <script src="../plugins/live-counter.js"></script>
-    <script src="../plugins/copy.js"></script>
-    <script src="../plugins/context-menu.js"></script>
-    <script src="../plugins/input-validation.js"></script>
-    <script src="../plugins/typer.js"></script>
-    <script src="../plugins/keys.js"></script>
+    <script src="../plugins/find-array/find-array.js"></script>
+    <script src="../plugins/theme-toggle/theme-toggle.js"></script>
+    <script src="../plugins/ghost-state/ghost-state.js"></script>
+    <script src="../plugins/live-counter/live-counter.js"></script>
+    <script src="../plugins/copy/copy.js"></script>
+    <script src="../plugins/context-menu/context-menu.js"></script>
+    <script src="../plugins/input-validation/input-validation.js"></script>
+    <script src="../plugins/keys/keys.js"></script>
 
     <script>
         // Ghost state
@@ -301,15 +301,6 @@
             NS(btn).on("click", (e) => {
                 alert(`You clicked on: ${e.target.textContent.trim()}`);
             });
-        });
-
-        // Typer
-        NS.type({
-            target: "#text-to-type",
-            strings: [NS("#text-to-type").getText()[0], "We all love Kasane Teto!", "She is the best UTAU!", "And you are amazing for viewing my code!"],
-            speed: 100,
-            loop: true,
-            loopDelay: 1000
         });
 
         // Keys

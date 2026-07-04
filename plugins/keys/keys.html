@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NS Find – Find Array Test</title>
+
+    <style>
+        /* Light theme (default) */
+        body {
+            background: #f0f0f0;
+            color: #222;
+            font-family: system-ui, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: inherit;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid #ccc;
+            max-width: 100%;
+        }
+
+        code {
+            background: rgba(0, 0, 0, 0.06);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>🎹 NS Keys</h1>
+        <p>Click <code>Ctrl+H</code> to see <b>"Hello World!"</b> popup!</p>
+    </div>
+
+    <script src="../../main.min.js"></script>
+    <script src="../keys/keys.js"></script>
+    <script>
+        NS.combination({
+            selector: "body",
+            keys: ["h", "H"],
+            control: true,
+            action: () => {
+                alert("Hello World!");
+            }
+        });
+    </script>
+</body>
+
+</html>
