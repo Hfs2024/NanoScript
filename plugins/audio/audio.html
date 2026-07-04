@@ -73,6 +73,7 @@
 
         /* Shake animation for the body */
         @keyframes shake {
+
             0%,
             100% {
                 transform: translate(0, 0) rotate(0deg);
@@ -167,6 +168,7 @@
 
     <script src="../../main.min.js"></script>
     <script src="../audio/audio.js"></script>
+    <script src="../keys/keys.js"></script>
 
     <script>
         function play() {
@@ -253,9 +255,32 @@
             play();
         });
 
-        /* Planning to add:
-          1- Random music from array
-        */
+        // Key combinations
+        NS.combination({
+            keys: ["ArrowLeft", "ArrowDown"],
+            selector: "body",
+            action: () => {
+                const currentTime = myAudio.getCurrentTime() - 2;
+                myAudio.setCurrentTime(currentTime);
+            }
+        });
+
+        NS.combination({
+            keys: ["ArrowRight", "ArrowUp"],
+            selector: "body",
+            action: () => {
+                const currentTime = myAudio.getCurrentTime() + 2;
+                myAudio.setCurrentTime(currentTime);
+            }
+        });
+
+        NS.combination({
+            keys: [" "],
+            selector: "body",
+            action: () => {
+                play();
+            }
+        });
     </script>
 </body>
 

@@ -49,6 +49,14 @@ NS.audio = ({
 
         unMute: () => {
             return audio.muted = false;
+        },
+
+        getCurrentTime:() => {
+            return audio.currentTime;
+        },
+
+        setCurrentTime: (value) => {
+            return audio.currentTime = parseFloat(value); // Ensure it's a number
         }
     }
 
