@@ -1,6 +1,7 @@
 NS.findArray = ({
   items,
-  element
+  element,
+  autoSync = true
 }) => {
   if (!items || !element) return console.error("Make sure all arguments exist!.");
   const foundElement = document.querySelector(element);
@@ -16,7 +17,7 @@ NS.findArray = ({
     checkIfMatch();
   });
 
-  checkIfMatch();
+  if (autoSync) checkIfMatch();
 }
 
 /* 

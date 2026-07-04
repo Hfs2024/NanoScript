@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NS ContextMenu – Live Test</title>
+    <title>NS Audio – Live Test</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
 
     <style>
@@ -54,11 +54,65 @@
             transform: scale(0.96);
         }
 
-        .group {
+        .btn-group {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 20px;
+        }
+
+        #enable-crazy-mode {
+            background-color: rgb(243, 111, 111);
+            width: 100%;
+        }
+
+        .fa-radiation {
+            color: red;
+            font-size: 50px;
+        }
+
+        /* Shake animation for the body */
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            10% {
+                transform: translate(-4px, -2px) rotate(-1deg);
+            }
+
+            20% {
+                transform: translate(3px, 1px) rotate(1deg);
+            }
+
+            30% {
+                transform: translate(-2px, 50px) rotate(52deg);
+            }
+
+            40% {
+                transform: translate(2px, -1px) rotate(1deg);
+            }
+
+            50% {
+                transform: translate(-3px, 2px) rotate(-1deg);
+            }
+
+            60% {
+                transform: translate(15px, 1px) rotate(0deg);
+            }
+
+            70% {
+                transform: translate(-1px, -5px) rotate(1deg);
+            }
+
+            80% {
+                transform: translate(2px, 5px) rotate(-17deg);
+            }
+
+            90% {
+                transform: translate(-3px, -1px) rotate(15deg);
+            }
         }
 
         @media (max-width: 768px) {
@@ -73,11 +127,21 @@
 <body>
 
     <div class="container">
-        <h1>🔉 NS Audio</h1>
+        <h1 id="header">🔉 NS Audio</h1>
 
-        <p><b>Current loop status: </b> <span id="current-loop-status">true</span></p>
+        <div class="status">
+            <p><b>Current loop status: </b> <span id="current-loop-status">true</span></p>
+            <p><b>Current mute status: </b> <span id="current-mute-status">false</span></p>
+            <p><b>Current volume: </b> <span id="current-volume">0.1</span></p>
+        </div>
 
-        <div class="group">
+        <div class="volume">
+            <label><b>Set Volume:</b> </label> <input type="range" id="volume-slider" min="0" max="1" step="0.01"
+                value="0.1" />
+            </br></br>
+        </div>
+
+        <div class="btn-group">
             <button id="play-btn">
                 <i class="fas fa-play"></i>
             </button>
@@ -88,31 +152,24 @@
                 Loop <i class="fas fa-repeat"></i>
             </button>
         </div>
+
+        <div class="danger">
+            </br>
+            <hr>
+
+            <p><b>Danger: </b> Do you want to enable crazy mode?</p>
+            <button id="enable-crazy-mode">
+                <i class="fas fa-warning"></i>
+                Enable
+            </button>
+        </div>
     </div>
 
     <script src="../../main.min.js"></script>
     <script src="../audio/audio.js"></script>
 
     <script>
-        let myAudio = NS.audio({
-            src: "audios/race-start-beeps.mp3",
-            loop: true,
-            onEnd: () => {
-                NS("#play-btn").html("<i class='fas fa-play'></i>");
-            }
-        });
-
-        NS("#loop-btn").on("click", function () {
-            myAudio.setLoop(!myAudio.isLooped());
-            NS("#current-loop-status").setText(myAudio.isLooped().toString());
-            NS("#play-btn").click();
-        });
-
-        NS("#mute-btn").on("click", function () {
-            console.log("Hey, still working!");
-        });
-
-        NS("#play-btn").on("click", function () {
+        function play() {
             if (myAudio.isPaused()) {
                 NS("#play-btn").html("<i class='fas fa-pause'></i>");
                 myAudio.play();
@@ -120,13 +177,84 @@
                 NS("#play-btn").html("<i class='fas fa-play'></i>");
                 myAudio.pause();
             }
+        }
+
+        let myAudio = NS.audio({
+            src: "audios/race-start-beeps.mp3",
+            loop: true,
+            volume: 0.1,
+            onEnd: () => {
+                NS("#play-btn").html("<i class='fas fa-play'></i>");
+            },
+            onStart: () => {
+                console.log("Video is running...");
+            }
+        });
+
+        NS("#enable-crazy-mode").on("click", function () {
+            const check = window.confirm("Are you reallllllly sure? This will destory everyhting.");
+            if (!check) return;
+            if (!myAudio.isPaused()) return alert("Make sure the audio is paused.");
+            myAudio.play();
+            myAudio.setLoop(true);
+            myAudio.unMute();
+
+            // You can no longer control the page 😆
+            NS(".btn-group").remove();
+            NS(".danger").remove();
+            NS(".status").remove();
+            NS("#header").setText("Losing my sanity 🤪");
+
+            let interval = setInterval(() => {
+                NS("#volume-slider").setVal(
+                    Math.random() * 1
+                );
+            }, 200);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                NS(".volume").remove();
+                myAudio.pause();
+                document.body.style.animation = "shake 0.3s ease";
+                document.body.addEventListener("animationend", function () {
+                    setTimeout(() => {
+                        document.body.innerHTML = `
+                          <i class='fas fa-radiation'></i>
+                          <h1 style='text-align: center;'>Don't say I didn't tell you 😏!</h1>
+                          <button onclick='location.reload()'>Fix the issues</button>
+                        `;
+                    }, 300);
+                })
+            }, 3000);
+        });
+
+        NS("#volume-slider").on("input", function () {
+            let volume = parseFloat(this.value);
+            myAudio.setVolume(volume);
+            NS("#current-volume").setText(
+                volume.toString() === "1" ? "1 (Max)" : volume.toString()
+            );
+        });
+
+        NS("#loop-btn").on("click", function () {
+            myAudio.setLoop(!myAudio.isLooped());
+            NS("#current-loop-status").setText(myAudio.isLooped().toString());
+            play();
+        });
+
+        NS("#mute-btn").on("click", function () {
+            let muteState = myAudio.toggleMute();
+            NS("#current-mute-status").setText(muteState.toString());
+            if (muteState) NS("#mute-btn").html("<i class='fas fa-volume-up'></i>");
+            else NS("#mute-btn").html("<i class='fas fa-volume-xmark'></i>");
+        });
+
+        NS("#play-btn").on("click", function () {
+            play();
         });
 
         /* Planning to add:
           1- Random music from array
-          2- Set speed
-          3- Set volume
-          4- onPlay
         */
     </script>
 </body>
