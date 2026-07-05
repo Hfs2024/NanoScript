@@ -302,11 +302,11 @@ function NS(selector) {
     return elements.map(el => el.dataset?.[target]);
   },
 
-  obj.setDataSetItem = function (target, value) {
-    for (let i = 0; i < elements.length; i++) elements[i].dataset[target] = value;
+    obj.setDataSetItem = function (target, value) {
+      for (let i = 0; i < elements.length; i++) elements[i].dataset[target] = value;
 
-    return obj;
-  }
+      return obj;
+    }
 
   return obj;
 }
@@ -318,11 +318,15 @@ NS.ready = function (fn) {
 }
 
 NS.createEl = function (type, target, props) {
-  if ((typeof props !== "object") || (props === null)) return console.log("Props arg must be a type of object, and not null.");
-  let el = document.createElement(type);
+  if (typeof props !== "object" || props === null) {
+    return console.error("Props must be an object, not null.");
+  }
+
+  const rawTarget = target?.[0] || target;
+  const el = document.createElement(type);
   for (let key in props) el[key] = props[key];
 
-  target.appendChild(el);
+  if (rawTarget && rawTarget?.appendChild) rawTarget.appendChild(el);
   return el;
 };
 
