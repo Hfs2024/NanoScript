@@ -104,7 +104,7 @@
             }
 
             70% {
-                transform: translate(-1px, -5px) rotate(1deg);
+                transform: translate(-145px, -5px) rotate(13deg);
             }
 
             80% {
@@ -117,9 +117,10 @@
         }
 
         @media (max-width: 768px) {
-            .group {
+            .btn-group {
                 justify-content: flex-start;
                 overflow: auto;
+                margin: 10px;
             }
         }
     </style>
@@ -149,15 +150,16 @@
             <button id="mute-btn">
                 <i class="fas fa-volume-xmark"></i>
             </button>
+            <input type="file" id="upload-input" accept="audio/*" style="display: none;" />
+            <button id="upload-btn">
+                <i class="fas fa-upload"></i>
+            </button>
             <button id="loop-btn">
                 Loop <i class="fas fa-repeat"></i>
             </button>
         </div>
 
         <div class="danger">
-            </br>
-            <hr>
-
             <p><b>Danger: </b> Do you want to enable crazy mode?</p>
             <button id="enable-crazy-mode">
                 <i class="fas fa-warning"></i>
@@ -171,6 +173,8 @@
     <script src="../keys/keys.js"></script>
 
     <script>
+        let myAudio = null;
+
         function play() {
             if (myAudio.isPaused()) {
                 NS("#play-btn").html("<i class='fas fa-pause'></i>");
@@ -181,17 +185,21 @@
             }
         }
 
-        let myAudio = NS.audio({
-            src: "audios/race-start-beeps.mp3",
-            loop: true,
-            volume: 0.1,
-            onEnd: () => {
-                NS("#play-btn").html("<i class='fas fa-play'></i>");
-            },
-            onStart: () => {
-                console.log("Video is running...");
-            }
-        });
+        function setAudio(src) {
+            myAudio = NS.audio({
+                src: src,
+                loop: true,
+                volume: 0.1,
+                onEnd: () => {
+                    NS("#play-btn").html("<i class='fas fa-play'></i>");
+                },
+                onStart: () => {
+                    console.log("Video is running...");
+                }
+            });
+        }
+
+        setAudio("audios/race-start-beeps.mp3");
 
         NS("#enable-crazy-mode").on("click", function () {
             const check = window.confirm("Are you reallllllly sure? This will destory everyhting.");
@@ -211,7 +219,7 @@
                 NS("#volume-slider").setVal(
                     Math.random() * 1
                 );
-            }, 200);
+            }, 10);
 
             setTimeout(() => {
                 clearInterval(interval);
@@ -251,6 +259,22 @@
             else NS("#mute-btn").html("<i class='fas fa-volume-xmark'></i>");
         });
 
+        NS("#upload-btn").on("click", function () {
+            NS("#upload-input").click();
+        });
+
+        NS("#upload-input").on("change", function (e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                myAudio.pause(); // Pause old instance
+                NS("#play-btn").html("<i class='fas fa-play'></i>");
+                setAudio(reader.result);
+            }
+
+            reader.readAsDataURL(file);
+        })
+
         NS("#play-btn").on("click", function () {
             play();
         });
@@ -278,7 +302,7 @@
             keys: [" "],
             selector: "body",
             action: () => {
-                play();
+                NS("#play-btn").click();
             }
         });
     </script>
