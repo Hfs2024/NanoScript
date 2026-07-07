@@ -159,6 +159,11 @@ function NS(selector) {
     return obj;
   };
 
+  obj.removeAttr = function (name) {
+    for (let i = 0; i < elements.length; i++) elements[i].removeAttribute(name);
+    return obj;
+  }
+
   obj.addClass = function (className) {
     for (let i = 0; i < elements.length; i++) elements[i].classList.add(className);
     return obj;
