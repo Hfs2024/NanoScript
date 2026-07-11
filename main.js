@@ -183,6 +183,11 @@ function NS(selector) {
     return elements.some(el => el.classList.contains(className));
   };
 
+  obj.replaceClass = function (oldClass, newClass) {
+    for (let i = 0; i < elements.length; i++) elements[i].classList.replace(oldClass, newClass);
+    return obj;
+  }
+
   obj.fadeIn = function (count = 1) {
     for (let i = 0; i < elements.length; i++) {
       const el = elements[i];
