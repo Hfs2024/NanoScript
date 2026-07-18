@@ -8,14 +8,31 @@ NS.liveCounter = ({
     showCounter = false,
     showRemaining = false,
     visualFeedback = [],
+    runVisualFeedback = false,
     onLimit
 }) => {
     if (typeof onLimit !== "function") return console.error("onLimit arg must be a type of function.");
     if (!element || !Number.isInteger(max) || !Array.isArray(allowedKeys) || !Array.isArray(excludeChars) || !Array.isArray(visualFeedback)) return console.error("Please provide all arguments. Make sure max is a number, and excludeChars, visualFeedback and allowedKeys are arrays.");
     const foundElement = document.querySelector(element);
-    let foundCounter = "";
-    let foundRemaining = "";
+    const runVisualFeedbackCheck = () => {
+        const length = foundElement.value.length;
 
+        for (let item of visualFeedback) {
+            if (!item.value || !item.class || !Array.isArray(item.addTo)) {
+                console.log("One of your visual feedback objects don't match the default syntax.");
+                break;
+            }
+
+            for (let el of item.addTo) {
+                const foundItem = document.querySelector(el);
+                if (item.value < length) foundItem.classList.add(item.class);
+                else foundItem.classList.remove(item.class);
+            }
+        }
+    }
+
+    let foundCounter = null;
+    let foundRemaining = null;
     if (showCounter) foundCounter = document.querySelector(counterElement);
     if (showRemaining) foundRemaining = document.querySelector(remainingElement);
 
@@ -26,12 +43,12 @@ NS.liveCounter = ({
             pasted = pasted.replaceAll(new RegExp(`[${excludeChars.join('')}]`, 'g'), "");
         }
 
-        const length = foundElement.value.length;
         const newLength = length + pasted.length;
         const remain = max - length;
 
         if (newLength > max) {
             e.preventDefault();
+            const length = foundElement.value.length;
             foundElement.value += pasted.slice(0, remain);
             if (showCounter && foundCounter) foundCounter.textContent = `${length}/${max}`;
             if (showRemaining && foundRemaining) foundRemaining.textContent = max - length;
@@ -48,7 +65,6 @@ NS.liveCounter = ({
         }
 
         const length = foundElement.value.length;
-
         if (length >= max) {
             e.preventDefault();
             onLimit();
@@ -60,20 +76,10 @@ NS.liveCounter = ({
         if (showCounter && foundCounter) foundCounter.textContent = `${length}/${max}`;
         if (showRemaining && foundRemaining) foundRemaining.textContent = max - length;
 
-        for (let item of visualFeedback) {
-            if (!item.value || !item.class || !Array.isArray(item.addTo)) {
-                console.log("One of your visual feedback objects don't match the default syntax.");
-                break;
-            }
-
-            for (let el of item.addTo) {
-                const foundItem = document.querySelector(el);
-                if (item.value < length) foundItem.classList.add(item.class);
-                else foundItem.classList.remove(item.class);
-            }
-        }
+        runVisualFeedbackCheck();
     });
 
+    if (runVisualFeedback) runVisualFeedbackCheck();
     return {
         count: foundElement.value.length,
         remaining: max - foundElement.value.length
