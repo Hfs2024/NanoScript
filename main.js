@@ -188,11 +188,11 @@ function NS(selector) {
     return obj;
   }
 
-  obj.fadeIn = function (count = 1) {
+  obj.fadeIn = function (count = 1, fill = "forwards") {
     for (let i = 0; i < elements.length; i++) {
       const el = elements[i];
       el.style.display = "";
-      el.style.animation = `fadeIn 1s ease ${count} `;
+      el.style.animation = `fadeIn 1s ease ${count} ${fill}`;
     }
     return obj;
   };
@@ -344,7 +344,8 @@ NS.fetch = async function ({
   url, path, type,
   method = "GET", body = {},
   mediaType = "application/json",
-  headers
+  headers,
+  credentials = 'include'
 } = {}) {
   try {
     method = method.toUpperCase();
@@ -355,7 +356,8 @@ NS.fetch = async function ({
     const options = hasPayload ? {
       method: method,
       headers: { "Content-Type": mediaType, ...headers },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
+      credentials: credentials
     } : { method: method };
 
     response = await fetch(url, options);
