@@ -84,7 +84,10 @@
     <script>
         NS.findArray({
             items: document.querySelectorAll(".song"),
-            element: "#teto-songs-input"
+            element: "#teto-songs-input",
+            onInput: matches => {
+                console.log(matches);
+            }
         });
 
         NS(".song").each(song => {
