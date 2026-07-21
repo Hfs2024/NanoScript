@@ -197,6 +197,12 @@ function NS(selector) {
     return obj;
   };
 
+  obj.focus = function (n = 0) {
+    const index = Number.isInteger(n) ? n : 0;
+    elements[index]?.focus();
+    return obj;
+  };
+
   obj.fadeOut = function (fill = "forwards") {
     for (let i = 0; i < elements.length; i++) {
       const el = elements[i];
