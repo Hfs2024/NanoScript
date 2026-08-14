@@ -78,9 +78,9 @@
             max: 10,
             excludeChars: ["t", "T"],
             visualFeedback: [
-                { value: 3, class: "pre-warning", addTo: ["#my-textarea", "#counter", "#remaining"] },
-                { value: 5, class: "warning", addTo: ["#my-textarea", "#counter", "#remaining"] },
-                { value: 8, class: "danger", addTo: ["#my-textarea", "#counter", "#remaining"] }
+                { value: 3, class: "pre-warning", elements: ["#my-textarea", "#counter", "#remaining"] },
+                { value: 5, class: "warning", elements: ["#my-textarea", "#counter", "#remaining"] },
+                { value: 8, class: "danger", elements: ["#my-textarea", "#counter", "#remaining"] }
             ],
             onLimit: () => {
                 console.log("You have reached the limit 😏.");

@@ -42,12 +42,12 @@ NS.liveCounter = ({
         const length = element.value.length;
 
         for (let item of visualFeedback) {
-            if (!item.value || !item.class || !Array.isArray(item.addTo)) {
+            if (!item.value || !item.class || !Array.isArray(item.elements)) {
                 console.log("Invalid configuration!");
                 break;
             }
 
-            for (let el of item.addTo) {
+            for (let el of item.elements) {
                 const foundItem = document.querySelector(el);
                 if (item.value < length) foundItem.classList.add(item.class);
                 else foundItem.classList.remove(item.class);
