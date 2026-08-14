@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real World Example App Using NS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+
+    <style>
+        /* Light theme (default) */
+        body {
+            background: #f0f0f0;
+            color: #222;
+            font-family: system-ui, sans-serif;
+            transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* IE 10+ */
+        }
+
+        .container {
+            background: inherit;
+            padding: 2rem 3rem;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 1px solid #ccc;
+            max-width: 100%;
+            position: relative;
+            max-height: 400px;
+            overflow: auto;
+        }
+
+        input {
+            padding: 10px;
+            font-weight: bold;
+            border-radius: 20px;
+            border: none;
+        }
+
+        .songs-list {
+            text-align: left;
+            max-height: 200px;
+            overflow: auto;
+        }
+
+        .song {
+            background-color: #444;
+            color: white;
+            padding: 10px;
+            border-radius: 7px;
+            margin: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .song:hover {
+            background-color: #666;
+        }
+
+        button {
+            padding: 10px 28px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            background: #0077ff;
+            color: white;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #005fcc;
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        } 
+        
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 id="text-to-type">📂 All NS plugins in one project!</h1>
+        <p>Find some new <b>Kasane</b> songs!</p>
+        <div class="group">
+            <button id="clear-btn">Clear</button>
+            <button id="copy-btn">Copy</button>
+        </div></br></br>
+
+        <input id="teto-songs-input" type="text" placeholder="Enter song name.." /></br></br>
+        <div class="group">
+            <p>Count: <span id="count">0/50</span></p>
+            <p>Remaining: <span id="remaining">50</span></p>
+        </div>
+
+        <div class="songs-list">
+            <div class="song" data-path="songs/voices-in-my-head.mp3">Voices In My Head feat. <b>Kasane Teto</b></div>
+            <div class="song" data-path="songs/execution-clap.mp3">Execution Clap feat. <b>Kasane Teto</b></div>
+            <div class="song" data-path="songs/YARARARA.mp3">YARARARA feat. <b>Kasane Teto</b></div>
+            <div class="song" data-path="songs/pixel-down.mp3">Pixel Down. feat <b>Kasane Teto</b></div>
+            <div class="song" data-path="songs/cult.mp3">Cult. feat <b>Kasane Teto</b></div>
+            <div class="song" data-path="songs/signaling.mp3">Signaling. feat <b>Hatsune Miku and Kasane
+                    Teto</b></b></div>
+        </div>
+    </div>
+
+    <!-- 🚀🚀🚀 Load everything 🚀🚀🚀 -->
+    <script src="../../../main.min.js"></script>
+    <script src="../../../plugins/find-array/find-array.js"></script>
+    <script src="../../../plugins/ghost-state/ghost-state.js"></script>
+    <script src="../../../plugins/live-counter/live-counter.js"></script>
+    <script src="../../../plugins/copy/copy.js"></script>
+    <script src="../../../plugins/keys/keys.js"></script>
+    <script src="../../../plugins/audio/audio.js"></script>
+
+    <script>
+        const songs = NS(".song");
+        const clearBtn = NS("#clear-btn");
+        const copyBtn = NS("#copy-btn");
+        const count = NS("#count");
+        const remaining = NS("#remaining");
+        let audio = null;
+
+        // Ghost state
+        NS.getGhostState();
+        NS.ghostState({
+            selector: "#teto-songs-input",
+            resave: 100
+        });
+
+        // Teto songs filter (Auto sync by default)
+        NS.findArray({
+            items: [...document.querySelectorAll(".song")],
+            selector: "#teto-songs-input"
+        });
+
+        songs.each(song => {
+            NS(song).on("click", function () {
+                if (audio?.pause) audio.pause(); // Stops the old
+
+                audio = NS.audio({
+                    src: song.dataset.path
+                });
+
+                audio.play();
+            });
+        });
+
+        // Live counter
+        const counter = NS.liveCounter({
+            selector: "#teto-songs-input",
+            max: 50,
+            showCounter: true,
+            showRemaining: true,
+            counterElement: "#count",
+            remainingElement: "#remaining",
+            allowedKeys: ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Control', 'Alt'],
+            onLimit: () => {
+                alert("No Kasane Teto song name is that tall 😅.");
+            }
+        });
+
+        // Count sync (Keep in mind that it only returns once per load, not everytime you type)
+        count.setText(`${counter.count}/50`);
+        remaining.setText(`${counter.remaining}`);
+
+        // Copy button
+        copyBtn.on("click", function () {
+            NS.copy({
+                text: NS("#teto-songs-input").getVal()[0] || "",
+                onSuccess: () => {
+                    alert("Copied!")
+                },
+
+                onFailure: (e) => {
+                    alert(`Failed: ${e.message}`);
+                }
+            });
+        });
+
+        // Clear button
+        clearBtn.on("click", function () {
+            NS.clearGhostState("#teto-songs-input", () => {
+                location.reload();
+            });
+        });
+
+        // Keys
+        // Will it disable inspection? Yeah, but only via Ctrl + Shift + I. F12 is still usable. But hey, it's a fun little easter egg 😎
+        NS.combination({
+            keys: ["i", "I"],
+            selector: "body",
+            control: true,
+            shift: true,
+            action: () => {
+                alert("Teto is never inspectable via this command 😈. Try F12.");
+            }
+        });
+    </script>
+</body>
+
+</html>
