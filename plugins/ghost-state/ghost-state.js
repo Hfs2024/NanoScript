@@ -33,22 +33,16 @@ NS.getGhostState = (onClose = false, onCloseAction) => {
  */
 NS.ghostState = ({
     selector = "",
-    type = "",
+    type = "value",
     resave = 3000,
     timeout = null,
     onSave
 } = {}) => {
-    if (!selector) {
-        console.error("Invalid configration!");
-        return false;
-    }
+    if (!selector) return false;
     const element = document.querySelector(selector);
-    if (!element) {
-        console.error("Invalid selector!");
-        return false;
-    }
+    if (!element) return false;
+    if (!["value", "innerHTML", "textContent"].some(t => t === type)) return false;
     resave = Number.isInteger(resave) ? resave : 3000;
-    type = type === "text" ? "textContent" : type === "html" ? "innerHTML" : "value";
 
     const update = () => {
         const currentSaves = JSON.parse(localStorage.getItem("ns-current-saves")) || [];
@@ -78,16 +72,10 @@ NS.ghostState = ({
  * @param {Function} onEnd - Action triggered once auto-save drafts is cleared
  * * @returns {boolean} Returns true if successfully cleared, and false if it fails
  */
-NS.clearGhostState = (selector = "", onEnd) => {
-    if (!selector) {
-        console.error("Invalid configration!");
-        return false;
-    }
+NS.clearGhostState = (selector = "") => {
+    if (!selector) return false;
     const element = document.querySelector(selector);
-    if (!element) {
-        console.error("Invalid selector!");
-        return false;
-    }
+    if (!element) return false;
 
     const currentSaves = JSON.parse(localStorage.getItem("ns-current-saves")) || [];
     const index = currentSaves.findIndex(save => save.selector === selector);
@@ -96,6 +84,5 @@ NS.clearGhostState = (selector = "", onEnd) => {
     currentSaves.splice(index, 1);
 
     localStorage.setItem("ns-current-saves", JSON.stringify(currentSaves));
-    if (typeof onEnd === "function") onEnd();
     return true;
 }

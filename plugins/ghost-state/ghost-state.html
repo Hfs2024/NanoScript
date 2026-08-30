@@ -7,7 +7,6 @@
     <title>NS Ghost State – Live Test</title>
 
     <style>
-        /* Light theme (default) */
         body {
             background: #f0f0f0;
             color: #222;
@@ -103,7 +102,7 @@
         // Only use this plugin for small forms.
         const interval = null;
         const resave = 100;
-        NS.getGhostState(false);
+        NS.getGhostState();
 
         NS.ghostState({
             selector: "#username-input",
@@ -122,19 +121,21 @@
         });
 
         NS("#clear-username-btn").on("click", function () {
-            const cleared = NS.clearGhostState("#username-input", () => {
+            const cleared = NS.clearGhostState("#username-input");
+            if (cleared) {
                 alert("Cleared username!");
                 NS("#username-input").setVal("");
-            });
+            }
 
             console.log(`Clear: ${cleared}`);
         });
 
         NS("#clear-age-btn").on("click", function () {
-            const cleared = NS.clearGhostState("#age-input", () => {
+            const cleared = NS.clearGhostState("#age-input");
+            if (cleared) {
                 alert("Cleared!");
                 NS("#age-input").setVal("");
-            });
+            }
 
             console.log(`Clear: ${cleared}`);
         });

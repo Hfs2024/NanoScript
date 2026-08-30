@@ -18,11 +18,7 @@ NS.audio = ({
     onPause
 } = {}) => {
     volume = parseFloat(volume);
-    if (Number.isNaN(volume) || volume < 0 || volume > 1 || !src) {
-        console.error("Invalid configuration!");
-        return false;
-    }
-
+    if (Number.isNaN(volume) || volume < 0 || volume > 1 || !src) return false;
     const audio = new Audio(src);
     audio.volume = volume;
     audio.loop = loop ? true : false; // Ensure it's a boolean
@@ -30,12 +26,14 @@ NS.audio = ({
     const obj = {
         play: () => {
             if (typeof onStart === "function") onStart();
-            return audio.play();
+            audio.play();
+            return obj;
         },
 
         pause: () => {
             if (typeof onPause === "function") onPause();
-            return audio.pause();
+            audio.pause();
+            return obj;
         },
 
         isPaused: () => {
@@ -46,12 +44,18 @@ NS.audio = ({
             return audio.loop;
         },
 
+        isMuted: () => {
+            return audio.muted;
+        },
+
         setLoop: (value) => {
-            return audio.loop = value ? true : false; // Ensure it's a boolean
+            audio.loop = value ? true : false; // Ensure it's a boolean
+            return obj;
         },
 
         setVolume: (value) => {
-            return audio.volume = parseFloat(value); // Ensure it's a number
+            audio.volume = parseFloat(value); // Ensure it's a number
+            return obj;
         },
 
         toggleMute: () => {
@@ -59,19 +63,22 @@ NS.audio = ({
         },
 
         mute: () => {
-            return audio.muted = true;
+            audio.muted = true;
+            return obj;
         },
 
         unMute: () => {
-            return audio.muted = false;
+            audio.muted = false;
+            return obj;
         },
 
-        getCurrentTime:() => {
+        getCurrentTime: () => {
             return audio.currentTime;
         },
 
         setCurrentTime: (value) => {
-            return audio.currentTime = parseFloat(value); // Ensure it's a number
+            audio.currentTime = parseFloat(value); // Ensure it's a number
+            return obj;
         }
     }
 

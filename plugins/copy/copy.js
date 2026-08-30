@@ -11,18 +11,15 @@ NS.copy = async ({
     onSuccess,
     onFailure
 }) => {
-    if (!text) {
-        console.error("Please provide text to copy!");
+    if (typeof text === "string") return false;
+    if (!text) return false;
+
+    try {
+        await navigator.clipboard.writeText(text);
+        if (typeof onSuccess === "function") onSuccess(text);
+        return true;
+    } catch (e) {
+        if (typeof onFailure === "function") onFailure(e);
         return false;
-    };
-
-    await navigator.clipboard.writeText(text)
-        .then(() => {
-            if (typeof onSuccess === "function") onSuccess(text);
-        })
-        .catch(e => {
-            if (typeof onFailure === "function") onFailure(e);
-        });
-
-    return true;
-};
+    }
+}

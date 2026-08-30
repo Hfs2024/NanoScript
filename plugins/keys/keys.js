@@ -17,16 +17,9 @@ NS.combination = ({
     shift = false,
     action
 }) => {
-    if (!Array.isArray(keys) || !selector) {
-        console.error("Invalid configuration!")
-        return false;
-    }
-
+    if (!Array.isArray(keys) || !selector) return false;
     const element = document.querySelector(selector);
-    if (!element) {
-        console.error("Invalid selector!");
-        return false;
-    }
+    if (!element) return false;
 
     element.addEventListener("keydown", function (e) {
         let isMatchKey = false;
