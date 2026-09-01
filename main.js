@@ -15,12 +15,15 @@ function NS(selector) {
   for (let i = 0; i < elements.length; i++) obj[i] = elements[i];
 
   obj.css = function (prop, value) {
-    if (typeof prop === "object") {
+    if (typeof prop === "string" && Number.isInteger(value)) {
+      if (elements[value]) return window.getComputedStyle(elements[value])[prop];
+    } else if (typeof prop === "object") {
       for (let i = 0; i < elements.length; i++)
         for (let key in prop) elements[i].style[key] = prop[key];
     } else {
       for (let i = 0; i < elements.length; i++) elements[i].style[prop] = value;
     }
+
     return obj;
   }
 
