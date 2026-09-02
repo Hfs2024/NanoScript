@@ -59,23 +59,11 @@
             font-family: monospace;
         }
 
-        .mock-form {
-            font-size: 20px;
-        }
-
         input {
             padding: 10px;
             font-weight: bold;
             border-radius: 20px;
             border: none;
-        }
-
-        .group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            overflow-x: auto;
-            max-width: 100%;
         }
     </style>
 </head>
@@ -83,62 +71,37 @@
 <body>
 
     <div class="container">
-        <h1>👻 NS Ghost State</h1>
+        <h1>🆒 NS Drafts</h1>
         <p>Type something, click <code>Ctrl+R</code> and all data you entered will be saved!</p>
-        <p class="mock-form"><b>Mock form:</b></p>
-
         <input id="username-input" type="text" placeholder="Enter your name..." /></br></br>
-        <input id="age-input" type="number" placeholder="Enter your age..." /></br></br>
-
-        <div class="group">
-            <button id="clear-username-btn">Clear username</button>
-            <button id="clear-age-btn">Clear age</button>
-        </div>
+        <button id="clear-username-btn">Clear</button>
     </div>
 
     <script src="../../main.min.js"></script>
-    <script src="../ghost-state/ghost-state.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+    <script src="../drafts/drafts.js"></script>
+
     <script>
-        // Only use this plugin for small forms.
-        const interval = null;
-        const resave = 100;
-        NS.getGhostState();
+        async function start() {
+            const app1 = NS.drafts.createInstance("app1");
+            await NS.drafts.load("my-branch", app1); 
 
-        NS.ghostState({
-            selector: "#username-input",
-            resave: resave,
-            onSave: () => {
-                console.log("Saved!");
-            }
-        });
+            NS("#username-input").on("input", async function () {
+                await NS.drafts.save("my-branch", {
+                    "#username-input": {
+                        index: 0,
+                        value: NS("#username-input").getVal()[0]
+                    }
+                }, app1);
+            });
 
-        NS.ghostState({
-            selector: "#age-input",
-            resave: resave,
-            onSave: () => {
-                console.log("Saved!");
-            }
-        });
-
-        NS("#clear-username-btn").on("click", function () {
-            const cleared = NS.clearGhostState("#username-input");
-            if (cleared) {
-                alert("Cleared username!");
+            NS("#clear-username-btn").on("click", async function () {
+                await NS.drafts.removeKey("my-branch", "#username-input", app1);
                 NS("#username-input").setVal("");
-            }
+            });
+        }
 
-            console.log(`Clear: ${cleared}`);
-        });
-
-        NS("#clear-age-btn").on("click", function () {
-            const cleared = NS.clearGhostState("#age-input");
-            if (cleared) {
-                alert("Cleared!");
-                NS("#age-input").setVal("");
-            }
-
-            console.log(`Clear: ${cleared}`);
-        });
+        start();
     </script>
 </body>
 
