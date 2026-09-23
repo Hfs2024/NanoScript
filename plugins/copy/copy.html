@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NS Find – Find Array Test</title>
+    <title>NS Copy – Copy Test</title>
 
     <style>
         body {
@@ -59,12 +59,14 @@
         <h1>📝 NS Copy</h1>
         <p>Click "Copy" to copy the text!</p>
 
-        <button id="copy-btn">Copy</button>
+        <button id="copy-btn">
+            <i>Child</i> Copy
+        </button>
 
         <p id="copy-text">You can <b>copy</b> me by clicking the button!</p>
     </div>
 
-    <script src="../../main.min.js"></script>
+    <script src="../../main.js"></script>
     <script src="../copy/copy.js"></script>
     <script>
         NS("#copy-btn").on("click", function () {
@@ -79,7 +81,7 @@
 
                 }
             });
-        });
+        }).children().css("background-color", "red");
     </script>
 </body>
 

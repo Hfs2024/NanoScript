@@ -1,316 +1,278 @@
-function NS(selector) {
-  if (typeof selector === "function") {
-    NS.ready(selector);
-    return;
-  }
+(function (window) {
+  // Validators
+  const isString = str => typeof str === "string";
+  const isNullOrUndefined = data => data === null || data === undefined;
+  const isFunction = fn => typeof fn === "function";
+  const isObject = obj => Object.prototype.toString.call(obj) === "[object Object]";
 
-  let elements = [];
-  if (!selector) elements = [];
-  else if (selector && selector.nodeType) elements = [selector];
-  else if (selector instanceof NodeList || selector instanceof HTMLCollection) elements = Array.from(selector);
-  else elements = Array.from(document.querySelectorAll(selector));
+  // NS wrapper
+  function NS(selector) {
+    // Selector
+    let elements = [];
 
-  const obj = {};
-  obj.length = elements.length;
-  for (let i = 0; i < elements.length; i++) obj[i] = elements[i];
-
-  obj.css = function (prop, value) {
-    if (typeof prop === "string" && Number.isInteger(value)) {
-      if (elements[value]) return window.getComputedStyle(elements[value])[prop];
-    } else if (typeof prop === "object") {
-      for (let i = 0; i < elements.length; i++)
-        for (let key in prop) elements[i].style[key] = prop[key];
+    // Find elements
+    if (selector?.nodeType) {
+      elements = [selector];
+    } else if (selector instanceof NodeList || selector instanceof HTMLCollection) {
+      elements = Array.from(selector);
+    } else if (isString(selector)) {
+      try {
+        elements = Array.from(document.querySelectorAll(selector));
+      } catch {
+        elements = []; 
+      }
     } else {
-      for (let i = 0; i < elements.length; i++) elements[i].style[prop] = value;
+      elements = []; 
     }
 
-    return obj;
-  }
+    // Object wrapper
+    const obj = {};
+    for (let i = 0; i < elements.length; i++) obj[i] = elements[i];
 
-  obj.get = function (item) {
-    return elements.map(el => el.querySelector(item));
-  }
+    // Methods
+    obj.css = function (prop, value) {
+      if (isString(prop)) {
+        if (isNullOrUndefined(value)) return elements.map(el => window.getComputedStyle(el)[prop]);
 
-  obj.getAll = function (item) {
-    return elements.map(el => el.querySelectorAll(item));
-  }
-
-  obj.html = function (content) {
-    if (content === undefined) return elements[0]?.innerHTML;
-    for (let i = 0; i < elements.length; i++) elements[i].innerHTML = content;
-    return obj;
-  }
-
-  obj.animation = function (cssQuery) {
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].style.animation = `${cssQuery}`;
-    }
-    return obj;
-  }
-
-  obj.on = function (event, callback) {
-    for (let i = 0; i < elements.length; i++) elements[i].addEventListener(event, callback);
-    return obj;
-  }
-
-  obj.off = function (event, callback) {
-    elements.forEach(el => el.removeEventListener(event, callback));
-    return obj;
-  }
-
-  obj.remove = function () {
-    for (let i = 0; i < elements.length; i++) elements[i].remove();
-    return obj;
-  }
-
-  obj.show = function () {
-    for (let i = 0; i < elements.length; i++) elements[i].style.display = "";
-    return obj;
-  }
-
-  obj.hide = function () {
-    for (let i = 0; i < elements.length; i++) elements[i].style.display = "none";
-    return obj;
-  }
-
-  obj.toggleDisplay = function () {
-    for (let i = 0; i < elements.length; i++) {
-      const el = elements[i];
-
-      if (!el.dataset._display) {
-        el.dataset._display = getComputedStyle(el).display;
+        // Value exist
+        for (let el of elements) {
+          el.style[prop] = value;
+        }
+      } else if (isObject(prop)) {
+        for (let el of elements)
+          for (let key in prop) el.style[key] = prop[key];
       }
 
-      el.style.display =
-        getComputedStyle(el).display === "none"
-          ? el.dataset._display
-          : "none";
+      return obj;
     }
-    return obj;
-  }
 
-  obj.attr = function (name, value) {
-    if (value === undefined) return elements[0]?.getAttribute(name);
-    for (let i = 0; i < elements.length; i++) elements[i].setAttribute(name, value);
-    return obj;
-  };
+    obj.get = function (item) {
+      return elements.map(el => el.querySelector(item));
+    }
 
-  obj.removeAttr = function (name) {
-    for (let i = 0; i < elements.length; i++) elements[i].removeAttribute(name);
-    return obj;
-  }
+    obj.getAll = function (item) {
+      return elements.map(el => el.querySelectorAll(item));
+    }
 
-  obj.addClass = function (className) {
-    for (let i = 0; i < elements.length; i++) elements[i].classList.add(className);
-    return obj;
-  };
+    obj.html = function (content) {
+      if (isNullOrUndefined(content)) return elements.map(el => el.innerHTML);
+      for (let el of elements) el.innerHTML = content;
+      return obj;
+    }
 
-  obj.removeClass = function (className) {
-    for (let i = 0; i < elements.length; i++) elements[i].classList.remove(className);
-    return obj;
-  };
+    obj.on = function (event, callback) {
+      for (let el of elements) el.addEventListener(event, callback);
+      return obj;
+    }
 
-  obj.toggleClass = function (className) {
-    for (let i = 0; i < elements.length; i++) elements[i].classList.toggle(className);
-    return obj;
-  };
+    obj.off = function (event, callback) {
+      for (let el of elements) el.removeEventListener(event, callback);
+      return obj;
+    }
 
-  obj.hasClass = function (className) {
-    return elements.some(el => el.classList.contains(className));
-  };
+    obj.remove = function () {
+      for (let el of elements) el.remove();
+      return obj;
+    }
 
-  obj.replaceClass = function (oldClass, newClass) {
-    for (let i = 0; i < elements.length; i++) elements[i].classList.replace(oldClass, newClass);
-    return obj;
-  }
+    obj.show = function () {
+      for (let el of elements) el.style.display = "";
+      return obj;
+    }
 
-  obj.focus = function (n = 0) {
-    const index = Number.isInteger(n) ? n : 0;
-    elements[index]?.focus();
-    return obj;
-  }
+    obj.hide = function () {
+      for (let el of elements) el.style.display = "none";
+      return obj;
+    }
 
-  obj.parent = function () {
-    return NS(elements.map(el => el.parentElement).filter(el => el));
-  }
+    obj.append = function (target, index) {
+      if (target instanceof HTMLElement && Number.isInteger(index)) elements[index]?.appendChild(target);
+      return obj;
+    }
 
-  obj.children = function () {
-    const newElements = elements.flatMap(el => Array.from(el.children));
-    return NS(newElements);
-  };
+    obj.click = function () {
+      for (let el of elements) el.click();
+      return obj;
+    }
 
-  obj.siblings = function () {
-    return NS(elements.flatMap(el =>
-      Array.from(el.parentElement.children).filter(e => e !== el)
-    ));
-  }
+    obj.attr = function (name, value) {
+      if (isNullOrUndefined(value)) return elements.map(el => el.getAttribute(name));
+      for (let el of elements) el.setAttribute(name, value);
+      return obj;
+    }
 
-  obj.hover = function (overFn, outFn) {
-    if (typeof overFn !== "function" || typeof outFn !== "function") throw new TypeError("hover() expects two functions");
-    for (let i = 0; i < elements.length; i++) {
-      elements[i].addEventListener("mouseenter", function (e) {
-        overFn.call(this, e);
+    obj.removeAttr = function (name) {
+      for (let el of elements) el.removeAttribute(name);
+      return obj;
+    }
+
+    obj.addClass = function (className) {
+      for (let el of elements) el?.classList?.add(className);
+      return obj;
+    };
+
+    obj.removeClass = function (className) {
+      for (let el of elements) el?.classList?.remove(className);
+      return obj;
+    };
+
+    obj.toggleClass = function (className) {
+      for (let el of elements) el?.classList?.toggle(className);
+      return obj;
+    };
+
+    obj.hasClass = function (className) {
+      return elements.some(el => el?.classList?.contains(className));
+    };
+
+    obj.replaceClass = function (oldClass, newClass) {
+      for (let el of elements) el?.classList?.replace(oldClass, newClass);
+      return obj;
+    }
+
+    obj.parent = function () {
+      const parents = elements.map(el => el.parentElement).filter(el => el);
+      return NS([...new Set(parents)]);
+    };
+
+    obj.children = function () {
+      const children = elements.flatMap(el => Array.from(el.children));
+      return NS([...new Set(children)]);
+    };
+
+    obj.siblings = function () {
+      const siblings = elements.flatMap(el => {
+        if (!el.parentElement) return [];
+        return Array.from(el.parentElement.children).filter(e => e !== el);
       });
-      elements[i].addEventListener("mouseleave", function (e) {
-        outFn.call(this, e);
+      return NS([...new Set(siblings)]);
+    };
+
+
+    obj.hover = function (overFn, outFn) {
+      if (!isFunction(overFn) || !isFunction(outFn)) throw new TypeError("Expected two functions");
+
+      // Attach the events
+      for (let el of elements) {
+        el.addEventListener("mouseenter", function (e) {
+          overFn.call(this, e);
+        });
+        el.addEventListener("mouseleave", function (e) {
+          outFn.call(this, e);
+        });
+      }
+      return obj;
+    }
+
+    obj.once = function (callback) {
+      for (let el of elements) {
+        el.addEventListener("click", function handler(e) {
+          callback(e);
+          el.removeEventListener("click", handler);
+        });
+      }
+      return obj;
+    }
+
+    obj.setText = function (txt) {
+      for (let el of elements) el.textContent = txt;
+      return obj;
+    }
+
+    obj.getText = function () {
+      return elements.map(el => el.textContent);
+    }
+
+    obj.getVal = function () {
+      return elements.map(el => el.value);
+    }
+
+    obj.setVal = function (val) {
+      for (let el of elements) el.value = val;
+      return obj;
+    }
+
+    obj.each = function (cb) {
+      elements.forEach((elements, index) => {
+        cb(elements, index);
       });
+
+      return obj;
     }
-    return obj;
-  }
 
-  obj.once = function (callback) {
-    for (let i = 0; i < elements.length; i++) {
-      const el = elements[i];
-      const handler = function (e) {
-        callback(e);
-        el.removeEventListener("click", handler);
-      };
-      el.addEventListener("click", handler);
-    }
-    return obj;
-  }
-
-  obj.setText = function (txt) {
-    for (let i = 0; i < elements.length; i++) elements[i].textContent = txt;
-    return obj;
-  }
-
-  obj.getText = function () {
-    let values = [];
-    for (let i = 0; i < elements.length; i++) values.push(elements[i].textContent);
-
-    return values;
-  }
-
-  obj.getVal = function () {
-    let values = [];
-    for (let i = 0; i < elements.length; i++) values.push(elements[i].value);
-
-    return values;
-  }
-
-  obj.setVal = function (val) {
-    for (let i = 0; i < elements.length; i++) elements[i].value = val;
-    return obj;
-  }
-
-  obj.each = function (callback) {
-    elements.forEach((elements, index) => {
-      callback(elements, index);
-    });
-
-    return obj;
-  }
-
-  obj.clickAllOnce = function () {
-    for (let i = 0; i < elements.length; i++) elements[i]?.click();
-
-    return obj;
-  }
-
-  obj.click = function (count = 1, index = 0,) {
-    index = Number.isInteger(index) ? index : 0;
-    count = Number.isInteger(count) ? count : 0;
-
-    for (let i = 0; i < count; i++) elements[index]?.click();
-
-    return obj;
-  }
-
-  obj.append = function (target) {
-    for (let i = 0; i < elements.length; i++) {
-      const nodeToAppend = i === elements.length - 1 ? target : target.cloneNode(true);
-      elements[i].appendChild(nodeToAppend);
+    obj.focus = function (index = 0) {
+      if (Number.isInteger(index)) elements[index]?.focus(); // An index is needed here because you can't focus two elements at the same time
+      return obj;
     }
 
     return obj;
   }
 
-  obj.getDataSetItem = function (target) {
-    return elements.map(el => el.dataset?.[target]);
+  NS.ready = function (fn) {
+    if (document.readyState !== "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
   }
 
-  obj.setDataSetItem = function (target, value) {
-    for (let i = 0; i < elements.length; i++) elements[i].dataset[target] = value;
-    return obj;
+  NS.createEl = function (tag, target, props = {}) {
+    if (!isObject(props)) return null;
+
+    // Locate target
+    target = target?.[0] || target;
+    if (!(target instanceof HTMLElement)) return null;
+
+    // Create element
+    const el = document.createElement(tag);
+
+    // Add props
+    for (let key in props) el[key] = props[key];
+
+    // Append
+    target.appendChild(el);
+
+    // Return raw element
+    return el;
   }
 
-  return obj;
-}
-
-NS.ready = function (fn) {
-  if (document.readyState !== "loading") fn();
-  else document.addEventListener("DOMContentLoaded", fn);
-}
-
-NS.createEl = function (type = "", target = "", props = {}) {
-  if (typeof props !== "object" || props === null) return console.error("Props must be an object, not null.");
-
-  const rawTarget = target?.[0] || target;
-  const el = document.createElement(type);
-  for (let key in props) el[key] = props[key];
-
-  if (rawTarget && rawTarget?.appendChild) rawTarget.appendChild(el);
-  return el;
-};
-
-NS.fetch = async function ({
-  url = "",
-  path, type,
-  method = "GET", body = {},
-  mediaType = "application/json",
-  headers,
-  credentials = 'include',
-  options = {}
-} = {}) {
-  try {
-    method = method.toUpperCase();
-    let response = null;
-    let data;
-    const hasPayload = ["POST", "PUT", "PATCH"].includes(method.toUpperCase());
-    const payload = hasPayload ? {
-      method: method,
-      headers: { "Content-Type": mediaType, ...headers },
-      body: JSON.stringify(body),
-      credentials: credentials
-    } : { method: method };
-
-    for (const key in options) {
-      payload[key] = options[key];
-    }
-
-    response = await fetch(url, payload);
-    if (type === "text") data = await response.text();
-    else data = await response.json();
-
-    // Return data
-    if (path) return data[path];
-    return data;
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
-
-NS.xml = {
-  load: async function (filePath) {
+  NS.fetch = async function ({
+    url,
+    media = "application/json",
+    json = true,
+    method = "GET",
+    body = {},
+    headers = {},
+    options = {}
+  } = {}) {
     try {
-      const file = await fetch(filePath);
-      if (!file.ok) throw new Error("File not found!");
-      const text = await file.text();
-      const parser = new DOMParser();
-      const parsedXML = parser.parseFromString(text, "text/xml");
+      if (!isString(url) || !isString(method)) return null;
 
-      return parsedXML;
+      const safeBody = isObject(body) ? body : {};
+      const safeHeaders = isObject(headers) ? headers : {};
+      const safeOptions = isObject(options) ? options : {};
+      method = method.toUpperCase();
+      const hasPayload = ["POST", "PUT", "PATCH"].includes(method);
+      let response = null;
+      let data;
+
+      // Create the payload
+      const payload = hasPayload ? {
+        method: method,
+        headers: { "Content-Type": media, ...safeHeaders },
+        body: JSON.stringify(safeBody)
+      } : { method: method };
+
+      // Add extra options
+      for (const key in safeOptions) payload[key] = safeOptions[key];
+
+      // Fetch the data
+      response = await fetch(url, payload);
+      if (json) data = await response.json();
+      else data = await response.text();
+
+      return data;
     } catch (e) {
-      console.log("Error: " + e);
+      return e;
     }
-  },
-
-  getAll: function (xml, item) {
-    return xml.querySelectorAll(item);
-  },
-
-  get: function (xml, item) {
-    return xml.querySelector(item);
   }
-}
+
+  window.NS = NS;
+})(window);
